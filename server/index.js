@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const app = express();
 const cors = require("cors");
 require("dotenv").config();
@@ -14,6 +15,8 @@ app.use(
 );
 app.use(express.json());
 
+
+// mongodb
 const uri =`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@clusterone.lxvfmw8.mongodb.net/?retryWrites=true&w=majority&appName=ClusterOne`;
 
 const client = new MongoClient(uri, {
@@ -23,6 +26,35 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   },
 });
+
+
+// jwt 
+// jwt
+app.post("/jwt", async (req, res) => {
+  const userEmail = req.body;
+  const token = jwt.sign(userEmail, process.env.JWT_TOKEN, {
+    expiresIn: "123d",
+  });
+  res.send({ token });
+});
+
+// token verification
+const verifyToken = (req, res, next) => {
+  const authorization = req.headers.authorization;
+  if (!authorization) {
+    return res.send({ message: "No token" });
+  }
+
+  const token = authorization.split(" ")[1];
+  jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
+    if (err) {
+      return res.send({ message: "invalid token" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+};
+
 
 const dbConnect = async () => {
   try {
