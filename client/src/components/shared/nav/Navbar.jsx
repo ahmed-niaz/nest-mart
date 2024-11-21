@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
-import logo from '../../../assets/logo.png'
+import logo from "../../../assets/logo.png";
 import useAuth from "../../../hooks/useAuth";
 import DropdownMenu from "./DropdownMenu";
 const Navbar = () => {
@@ -30,16 +30,24 @@ const Navbar = () => {
               className="z-10 bg-black text-white dropdown-content  rounded-box  mt-3 w-52 p-2 shadow"
             >
               <li>
-                <NavLink className="font-bold ">Home</NavLink>
+                <NavLink to="/" className="font-bold ">
+                  Home
+                </NavLink>
               </li>
               <li>
-                <NavLink className=" font-bold ">Product</NavLink>
+                <NavLink to="/product" className=" font-bold ">
+                  Product
+                </NavLink>
               </li>
               <li>
-                <NavLink className=" font-bold ">About</NavLink>
+                <NavLink to="/about" className=" font-bold ">
+                  About
+                </NavLink>
               </li>
               <li>
-                <NavLink className="font-bold ">Contact</NavLink>
+                <NavLink to="/contact" className="font-bold ">
+                  Contact
+                </NavLink>
               </li>
             </ul>
           </div>
@@ -50,23 +58,31 @@ const Navbar = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="flex items-center justify-center gap-4">
             <li>
-              <NavLink className="text-black font-bold ">Home</NavLink>
+              <NavLink to="/" className="text-black font-bold ">
+                Home
+              </NavLink>
             </li>
             <li>
-              <NavLink className="text-black font-bold ">Product</NavLink>
+              <NavLink to="/product" className="text-black font-bold ">
+                Product
+              </NavLink>
             </li>
             <li>
-              <NavLink className="text-black font-bold ">About</NavLink>
+              <NavLink to="/about" className="text-black font-bold ">
+                About
+              </NavLink>
             </li>
             <li>
-              <NavLink className="text-black font-bold ">Contact</NavLink>
+              <NavLink to="/contact" className="text-black font-bold ">
+                Contact
+              </NavLink>
             </li>
           </ul>
         </div>
         <div className="navbar-end">
           <>
             {user ? (
-             <DropdownMenu/>
+              <DropdownMenu />
             ) : (
               <div className="flex gap-4">
                 <Link

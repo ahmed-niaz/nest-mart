@@ -8,10 +8,10 @@ const Root = () => {
       <section className="container mx-auto">
         <Navbar />
       </section>
-      <section>
+      <section className="max-container">
         <Outlet />
       </section>
-      <section>
+      <section className="max-container">
         <Footer />
       </section>
     </main>
