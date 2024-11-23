@@ -23,7 +23,7 @@ const Home = () => {
       <section>
         <FAQ />
       </section>
-      <section>
+      <section className="flex justify-center py-12 items-center">
         <ContactForm />
       </section>
     </main>

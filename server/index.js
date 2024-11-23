@@ -15,9 +15,8 @@ app.use(
 );
 app.use(express.json());
 
-
 // mongodb
-const uri =`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@clusterone.lxvfmw8.mongodb.net/?retryWrites=true&w=majority&appName=ClusterOne`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@clusterone.lxvfmw8.mongodb.net/?retryWrites=true&w=majority&appName=ClusterOne`;
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -27,8 +26,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-
-// jwt 
+// jwt
 // jwt
 app.post("/jwt", async (req, res) => {
   const userEmail = req.body;
@@ -55,11 +53,104 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+// collection
+const database = client.db("nest-mart");
+const usersCollection = database.collection("users");
+const buyersCollection = database.collection("buyers");
+const sellersCollection = database.collection("sellers");
+const productsCollection = database.collection("products");
 
 const dbConnect = async () => {
   try {
     client.connect();
     console.log(`Database connected successfully`);
+
+    // USER
+    // GET user
+    app.get("/users", async (req, res) => {
+      const result = await usersCollection.find().toArray();
+      res.send(result);
+    });
+    // SAVE new user data in database
+    app.put("/user", async (req, res) => {
+      const user = req.body;
+      const query = {
+        email: user?.email,
+      };
+      // check if user already exist in db
+      const isExist = await usersCollection.findOne(query);
+
+      // if(isExist ) return res.send(isExist)
+      if (isExist) {
+        if (user?.status === "Requested") {
+          // if existing user try to change his role
+          const result = await usersCollection.updateOne(query, {
+            $set: { status: user?.status },
+          });
+
+          return res.send(result);
+        } else {
+          // if existing user login again
+          return res.send(isExist);
+        }
+      }
+
+      // save user for first time
+      const options = { upsert: true };
+
+      const updateDoc = {
+        $set: {
+          ...user,
+          timestamp: Date.now(),
+        },
+      };
+      const result = await usersCollection.updateOne(query, updateDoc, options);
+      res.send(result);
+    });
+
+    // PRODUCTS
+    // add product
+    app.post("/add-products", async (req, res) => {
+      try {
+        const product = req.body;
+        const result = await productsCollection.insertOne(product);
+        res.send(result);
+      } catch (err) {
+        console.error("Error fetching user data:", err.message);
+      }
+    });
+
+    // get products
+    app.get("/my-products", async (req, res) => {
+      const { title, brand, category, sort } = req.query;
+      const query = {};
+
+      if (title) {
+        query.title = { $regex: title, $options: "i" };
+      }
+
+      if (category) {
+        query.category = category;
+      }
+
+      if (brand) {
+        query.brand = brand;
+      }
+      const sortOption = sort === "asc" ? 1 : -1;
+      const products = await productsCollection
+        .find(query)
+        .sort({ price: sortOption })
+        .toArray();
+
+      const product_info = await productsCollection
+        .find({}, { projection: { category: 1, brand: 1 } })
+        .toArray();
+      const brands = [...new Set(product_info.map((b) => b.brand))];
+      const categories = [...new Set(product_info.map((c) => c.category))];
+      const totalProducts = await productsCollection.countDocuments(query);
+
+      res.send({ products, totalProducts, brands, categories });
+    });
   } catch (error) {
     console.log(error.name, error.message);
   }

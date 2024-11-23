@@ -22,10 +22,10 @@ const DropdownMenu = () => {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
         >
             <li>
-          <Link className="font-bold" to='/dashboard/overview'>{user?.displayName}</Link>
+          <Link className="font-bold">{user?.displayName}</Link>
         </li>
            <li>
-          <Link className="font-bold" to='/dashboard/overview'>Dashboard</Link>
+          <Link className="font-bold" to='/dashboard'>Dashboard</Link>
         </li>
         <li>
           <Link className="font-bold" onClick={logout}>logout</Link>
