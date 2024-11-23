@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 const SortByPrice = ({ setSort }) => {
   return (
     <select
@@ -9,5 +10,9 @@ const SortByPrice = ({ setSort }) => {
     </select>
   );
 };
+
+SortByPrice.propTypes = {
+    setSort: PropTypes.func.isRequired,  // Validate setSort as a required function
+  };
 
 export default SortByPrice;

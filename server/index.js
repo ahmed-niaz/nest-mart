@@ -122,7 +122,7 @@ const dbConnect = async () => {
 
     // get products
     app.get("/my-products", async (req, res) => {
-      const { title, brand, category, sort } = req.query;
+      const { title, brand, category, sort, page = 1, limit = 9 } = req.query;
       const query = {};
 
       if (title) {
@@ -136,17 +136,22 @@ const dbConnect = async () => {
       if (brand) {
         query.brand = brand;
       }
+
+      const pageNumber = Number(page);
+      const limitNumber = Number(limit);
       const sortOption = sort === "asc" ? 1 : -1;
       const products = await productsCollection
         .find(query)
+        .skip((pageNumber - 1) * limitNumber)
+        .limit(limitNumber)
         .sort({ price: sortOption })
         .toArray();
 
-      const product_info = await productsCollection
-        .find({}, { projection: { category: 1, brand: 1 } })
-        .toArray();
-      const brands = [...new Set(product_info.map((b) => b.brand))];
-      const categories = [...new Set(product_info.map((c) => c.category))];
+      // const product_info = await productsCollection
+      //   .find({}, { projection: { category: 1, brand: 1 } })
+      //   .toArray();
+      const brands = [...new Set(products.map((b) => b.brand))];
+      const categories = [...new Set(products.map((c) => c.category))];
       const totalProducts = await productsCollection.countDocuments(query);
 
       res.send({ products, totalProducts, brands, categories });

@@ -28,4 +28,12 @@ export const categories = [
     id: 7,
     label: "Health & Beauty",
   },
+  {
+    id: 8,
+    label: "Camera",
+  },
+  {
+    id: 9,
+    label: "Wearables",
+  },
 ];

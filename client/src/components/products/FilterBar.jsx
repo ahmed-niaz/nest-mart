@@ -1,5 +1,5 @@
+import PropTypes from 'prop-types';  // Import PropTypes
 import { Blend, ListRestart } from "lucide-react";
-import { categories } from "./../dashboard/seller/categories";
 
 const FilterBar = ({
   setBrand,
@@ -9,12 +9,12 @@ const FilterBar = ({
   brands,
 }) => {
   return (
-    <section className="bg-slate-100  p-4">
-      <div className="flex items-center  gap-2">
+    <section className="bg-slate-100 p-4">
+      <div className="flex items-center gap-2">
         <span>
           <Blend />
         </span>
-        <h2 className="text-xl font-bold">Filters </h2>
+        <h2 className="text-xl font-bold">Filters</h2>
       </div>
       <div className="flex flex-col gap-4 mt-8">
         <div>
@@ -23,7 +23,7 @@ const FilterBar = ({
             className="select select-bordered w-full rounded-none"
           >
             {/* Brand */}
-            {brands.map((brand,idx) => (
+            {brands.map((brand, idx) => (
               <option key={idx} value={brand}>
                 {brand}
               </option>
@@ -36,7 +36,7 @@ const FilterBar = ({
             className="select select-bordered w-full rounded-none"
           >
             {/* Category */}
-            {categories.map((category,idx) => (
+            {categories.map((category, idx) => (
               <option key={idx} value={category}>
                 {category}
               </option>
@@ -53,6 +53,15 @@ const FilterBar = ({
       </button>
     </section>
   );
+};
+
+// PropTypes validation
+FilterBar.propTypes = {
+  setBrand: PropTypes.func.isRequired,
+  setCategory: PropTypes.func.isRequired,
+  handleReset: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  brands: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default FilterBar;

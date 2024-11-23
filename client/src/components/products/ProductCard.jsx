@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 const ProductCard = ({ product }) => {
   const { image, title, brand, category, price, description } = product;
 
@@ -31,5 +32,18 @@ const ProductCard = ({ product }) => {
     </div>
   );
 };
+
+// PropTypes validation
+ProductCard.propTypes = {
+  product: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    brand: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    description: PropTypes.string,
+  }).isRequired,
+};
+
 
 export default ProductCard;

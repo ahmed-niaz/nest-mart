@@ -8,7 +8,7 @@ import SortByPrice from "../../components/products/SortByPrice";
 import FilterBar from "../../components/products/FilterBar";
 import ProductCard from "../../components/products/ProductCard";
 import { useState } from "react";
-import { categories } from "./../../components/dashboard/seller/categories";
+import { SkipBack, SkipForward } from "lucide-react";
 
 const Products = () => {
   const axiosCommon = useAxios();
@@ -16,14 +16,17 @@ const Products = () => {
   const [sort, setSort] = useState("");
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: [search, sort, brand, category],
+    queryKey: [search, sort, brand, category, page],
     queryFn: async () => {
       const res = await axiosCommon(
-        `/my-products?title=${search}&sort=${sort}&brand=${brand}&category=${category}`
+        `/my-products?title=${search}&page=${page}&limit=9&sort=${sort}&brand=${brand}&category=${category}`
       );
       console.log(res.data);
+      setTotalPages(Math.ceil(res.data.totalProducts / 9));
       return res.data;
     },
   });
@@ -44,6 +47,14 @@ const Products = () => {
     setCategory("");
     setSort("asc");
     window.location.reload();
+  };
+
+  // handle page
+  const handlePage = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
@@ -83,6 +94,18 @@ const Products = () => {
               </div>
             )}
           </section>
+          {/* pagination */}
+          <div className="flex justify-center items-center gap-2 my-8">
+            <button disabled={page === 1} onClick={() => handlePage(page - 1)}>
+              <SkipBack />
+            </button>
+            <p>
+              Page {page} of {totalPages}
+            </p>
+            <button disabled={page === totalPages} onClick={() => handlePage(page + 1)}>
+              <SkipForward />
+            </button>
+          </div>
         </div>
       </section>
     </main>

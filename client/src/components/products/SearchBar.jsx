@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
-const SearchBar = ({handleSearch}) => {
+import PropTypes from "prop-types";
+const SearchBar = ({ handleSearch }) => {
   return (
     <form className="flex items-center justify-center" onSubmit={handleSearch}>
       <input
@@ -13,6 +14,9 @@ const SearchBar = ({handleSearch}) => {
       </button>
     </form>
   );
+};
+SearchBar.propTypes = {
+  handleSearch: PropTypes.func.isRequired, // Validate setSort as a required function
 };
 
 export default SearchBar;
